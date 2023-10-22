@@ -1,0 +1,42 @@
+/* color palette from <https://github.com/vuejs/theme> */
+
+:root {
+    --left-main-width: calc(var(--widthScreen) / 12 * 3);
+    --remain-main-width: calc(var(--widthScreen) / 12 * 9);
+    --color-btn-red: #ff6961;
+    --color-btn-green: #579981;
+    --color-price: #ee4d2d;
+    --color-drawer_item: #F1EAD4;
+    --color-blue-pastel:  #86C7C6;
+    --color-lightgrey-pastel:  #EDE9E6;
+    --color-red-pastel: #F4B3B3; 
+    --color-red-rose: #960144; 
+
+}
+
+body {
+    max-width: 1500px;
+    min-height: 100vh;
+    color: var(--vt-c-black);
+    background-color: #ffffff;
+    line-height: 1.6;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    color: var(--color-btn-red) !important;
+}
+
+.breadcrumb a {
+    color: var(--color-btn-red);
+    text-decoration: none;
+}
+
+.color-red-primary {
+    color: var(--color-btn-red);
+}
