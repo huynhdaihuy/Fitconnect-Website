@@ -1,22 +1,20 @@
 <template>
   <div class="wrapper d-flex">
     <div class="left_thumb">
-      <img
-        class="left_thumb-img"
-        src="../assets/img/register_img_thumb.jpg"
-        alt=""
-      />
+      <img class="left_thumb-img" src="../assets/img/register.jpg" alt="" />
     </div>
     <div class="form_wrapper">
-      <span class="heading_form">Đăng ký tài khoản !</span>
+      <span class="heading_form">Register coach account</span>
       <Form
         @submit="handleSubmit"
         class="form_register"
         :validation-schema="userFormSchema"
       >
         <div class="form-group">
-          <label class="label_form" for="username">Tên tài khoản</label>
-          <i class="fa-regular fa-user icon_form"></i>
+          <div class="d-flex justify-content-start align-items-center">
+            <label class="label_form" for="username">Username</label>
+            <i class="ml-2 fa-regular fa-user icon_form"></i>
+          </div>
           <Field
             name="username"
             type="text"
@@ -26,25 +24,31 @@
           <ErrorMessage name="username" class="error-feedback" />
         </div>
         <div class="form-group">
-          <label class="label_form" for="password">Tên mật khẩu</label>
-          <i class="fa-solid fa-lock icon_form"></i>
+          <div class="d-flex justify-content-start align-items-center">
+            <label class="label_form" for="password">Password</label>
+            <i class="ml-2 fa-solid fa-lock icon_form"></i>
+          </div>
           <Field
             name="password"
             type="Password"
             class="form-control"
-            placeholder="Tối thiểu 9 ký tự"
+            placeholder="Password for your account"
           />
           <ErrorMessage name="password" class="error-feedback" />
         </div>
         <div class="form-group">
-          <label class="label_form" for="name">Họ và tên</label>
-          <i class="fa-regular fa-circle-question icon_form"></i>
+          <div class="d-flex justify-content-start align-items-center">
+            <label class="label_form" for="name">Full name</label>
+            <i class="ml-2 fa-regular fa-circle-question icon_form"></i>
+          </div>
           <Field name="name" type="text" class="form-control" />
           <ErrorMessage name="name" class="error-feedback" />
         </div>
         <div class="form-group">
-          <label class="label_form" for="email">E-mail</label>
-          <i class="fa-regular fa-envelope icon_form"></i>
+          <div class="d-flex justify-content-start align-items-center">
+            <label class="label_form" for="email">E-mail</label>
+            <i class="ml-2 fa-regular fa-envelope icon_form"></i>
+          </div>
           <Field
             name="email"
             type="email"
@@ -54,102 +58,144 @@
           <ErrorMessage name="email" class="error-feedback" />
         </div>
         <div class="form-group">
-          <label class="label_form" for="address">Địa chỉ</label>
-          <i class="fa-regular fa-address-card icon_form"></i>
+          <div class="d-flex justify-content-start align-items-center">
+            <label class="label_form" for="address">Address</label>
+            <i class="ml-2 fa-regular fa-address-card icon_form"></i>
+          </div>
           <Field name="address" type="text" class="form-control" />
           <ErrorMessage name="address" class="error-feedback" />
         </div>
         <div class="form-group">
-          <label class="label_form" for="phone">Số điện thoại</label>
-          <i class="fa-solid fa-phone icon_form" style="color: white"></i>
-          <Field name="phone" type="tel" class="form-control" />
-          <ErrorMessage name="phone" class="error-feedback" />
+          <div class="d-flex justify-content-start align-items-center">
+            <label class="label_form" for="phone_number">Phone</label>
+            <i
+              class="ml-2 fa-solid fa-phone icon_form"
+              style="color: white"
+            ></i>
+          </div>
+          <Field name="phone_number" type="tel" class="form-control" />
+          <ErrorMessage name="phone_number" class="error-feedback" />
         </div>
         <div class="form-group">
-          <button class="btn btn-primary">Đăng ký</button>
+          <div class="d-flex justify-content-start align-items-center">
+            <label class="label_form" for="image">Gender</label>
+            <i class="ml-2 fa-solid fa-images"></i>
+          </div>
+          <Field name="gender" type="radio" class="mt-2 ml-3" value="male" />
+          Male
+          <Field
+            name="gender"
+            type="radio"
+            class="mt-2 ml-3"
+            style="color: var(--color-text-main)"
+            value="female"
+          />
+          Female
+          <Field
+            name="gender"
+            type="radio"
+            class="mt-2 ml-3"
+            style="color: var(--color-text-main)"
+            value="other"
+          />
+          Other
+          <ErrorMessage name="gender" class="error-feedback" />
+        </div>
+        <div class="form-group">
+          <div class="d-flex justify-content-start align-items-center">
+            <label class="label_form" for="image"
+              >Upload image for Avatar</label
+            >
+            <i class="ml-2 fa-solid fa-images"></i>
+          </div>
+          <Field name="image" type="file" class="mt-2" />
+          <ErrorMessage name="image" class="error-feedback" />
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary">Submit</button>
         </div>
       </Form>
-    </div>
-  </div>
-  <!-- Modal -->
-  <div v-if="isShowModal" class="modal fade" id="exampleModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
-            Đăng ký thành công !
-          </h5>
-        </div>
-        <div class="modal-body text-center" style="font-size: 18px">
-          Chào mừng bạn đến với Trek Cycling.
-        </div>
-        <div class="modal-footer">
-          <router-link
-            :to="{ path: '/' }"
-            class="text-decoration-none btn-modal"
-          >
-            <button @click="handleModal" type="button" class="btn btn-modal">
-              Trở về trang chủ !
-            </button>
-          </router-link>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 <script>
 import { Form, Field, ErrorMessage } from "vee-validate";
+import coachService from "../services/coach.service";
 import * as yup from "yup";
-// import userService from "../services/user.service";
 export default {
   name: "RegisterView",
   components: {
     Form,
     Field,
     ErrorMessage,
-    // userService,
+    coachService,
   },
   data() {
     const userFormSchema = yup.object().shape({
       username: yup
         .string()
-        .required("Tên tài khoản phải phải có giá trị.")
-        .min(8, "Tên tài khoản phải ít nhất 8 ký tự.")
-        .max(20, "Tên tài khoản có nhiều nhất 20 ký tự."),
+        .required("Username must have value")
+        .min(6, "Username's length at least is 6")
+        .max(20, "Username's length at most is 20"),
       password: yup
         .string()
-        .required("Mật khẩu phải có giá trị.")
-        .min(9, "Mật khẩu phải ít nhất 9 ký tự.")
-        .max(20, "Mật khẩu có nhiều nhất 20 ký tự."),
+        .required("Password must have value.")
+        .min(8, "Password's length at least is 6")
+        .max(20, "Password's length at most is 20"),
       name: yup
         .string()
-        .required("Tên phải có giá trị.")
-        .min(2, "Tên phải ít nhất 2 ký tự.")
-        .max(50, "Tên có nhiều nhất 50 ký tự."),
+        .required("Name must have value")
+        .min(2, "Name's length at least is 2")
+        .max(50, "Name's length at most is 50"),
       email: yup
         .string()
-        .email("E-mail không đúng.")
-        .max(50, "E-mail tối đa 50 ký tự."),
-      address: yup.string().max(100, "Địa chỉ tối đa 100 ký tự."),
+        .email("E-mail's format is wrong")
+        .max(50, "E-mail's length at most is 50"),
+      address: yup.string().max(100, "Name's length at most is 100"),
       phone: yup
         .string()
-        .matches(
-          /((09|03|07|08|05)+([0-9]{8})\b)/g,
-          "Số điện thoại không hợp lệ."
-        ),
+        .matches(/((09|03|07|08|05)+([0-9]{8})\b)/g, "Phone's format is wrong"),
     });
     return {
       userFormSchema,
-      isShowModal: false,
     };
   },
   methods: {
     async handleSubmit(value) {
+      value.birthday = '1997-03-13';
+      console.log(
+        "🚀 ~ file: RegisterView.vue:153 ~ handleSubmit ~ value:",
+        value
+      );
       try {
-        await userService.create(value);
-        this.isShowModal = !this.isShowModal;
+        await coachService.create(value);
+        this.$swal.fire({
+          title: "Sucessfull!",
+          text: "Welcome to Fitconnect Coach",
+          icon: "success",
+          iconColor: "green",
+          confirmButtonText: "Cool",
+          color: "black",
+          heightAuto: false,
+          confirmButtonColor: "green",
+          background: "white",
+        });
+        setTimeout(() => {
+          location.pathname = "/";
+        }, 1500);
       } catch (error) {
+        console.log(error);
         console.log("FAILED !");
+        this.$swal.fire({
+          title: "Failed",
+          text: "Your register is failed, try again",
+          icon: "error",
+          iconColor: "#ff6961",
+          confirmButtonText: "Try again",
+          color: "black",
+          confirmButtonColor: "#ff6961",
+          background: "white",
+        });
       }
     },
   },
@@ -158,37 +204,43 @@ export default {
 <style scoped>
 .wrapper {
   width: 100%;
-  min-height: 100vh;
+  height: 150vh;
   background-color: black;
+  overflow: hidden;
 }
 .left_thumb {
   width: 50%;
 }
 .left_thumb-img {
-  width: 100%;
-  min-height: 150vh;
+  position: relative;
+  left: 0;
+  height: 100%;
+  object-fit: contain;
 }
 .form_wrapper {
   width: 50%;
   color: white;
-  margin: 8rem 2rem;
+  margin: 2rem 2rem;
   display: flex;
   flex-direction: column;
 }
 .heading_form {
-  padding-top: 40px;
+  margin-right: 50%;
+  padding-top: 20px;
   margin-bottom: 20px;
+  color: var(--color-text-main);
   font-size: 28px;
   text-align: center;
   font-weight: 600;
 }
 .form_register {
-  margin: auto;
+  /* margin: auto;s */
 }
 .form-control {
+  display: inline-block;
   height: 20px;
-  min-width: 120px;
-  padding: 20px 80px;
+  width: 400px;
+  padding: 20px;
   margin-top: 12px;
 }
 .label_form {
@@ -201,11 +253,13 @@ export default {
 }
 .btn {
   margin-top: 28px;
-  width: 100%;
+  margin-left: 80px;
+  width: 30%;
   padding: 8px;
-  color: white;
-  background-color: #1d1e22;
-  border-color: black;
+  outline: none;
+  border: none;
+  color: black;
+  background-color: yellow;
 }
 .btn:hover,
 .btn:focus {
@@ -213,6 +267,8 @@ export default {
 }
 .error-feedback {
   color: red;
+  display: block;
+  margin-top: 4px;
 }
 .modal {
   display: block;

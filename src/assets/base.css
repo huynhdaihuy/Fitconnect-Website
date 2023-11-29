@@ -11,6 +11,9 @@
     --color-lightgrey-pastel:  #EDE9E6;
     --color-red-pastel: #F4B3B3; 
     --color-red-rose: #960144; 
+    --color-text-main: yellow;
+    --color-text-main-sub: rgb(235, 235, 99);
+
 
 }
 
@@ -40,3 +43,23 @@ body {
 .color-red-primary {
     color: var(--color-btn-red);
 }
+
+
+.input_search_heading {
+    width: 70%;
+    padding: 10px;
+    border-radius: 20px;
+    margin-left: 20px;
+    outline: none;
+    margin-top: 20px;
+  }
+  .input_search_heading:focus {
+    border: 3px solid var(--color-text-main);
+  
+  }
+  
+  .icon_search_heading {
+    position: absolute;
+    top: 34px;
+    right: 30%;
+  }

@@ -1,13 +1,24 @@
 <template>
-  <div class="wrapper flex align-items-center justify-content-center flex-wrap">
+  <div class="ml-4 input_form d-flex position-relative">
+    <input
+      class="input_search_heading"
+      type="text"
+      v-model="searchTextExercise"
+      placeholder="Enter the name of exercise you want to find ..."
+    />
+    <i class="fas fa-search icon_search_heading"> </i>
+  </div>
+  <div
+    class="mt-5 wrapper flex align-items-center justify-content-center flex-wrap"
+  >
     <h3
       v-if="listExercise.length == 0"
       class="font-weight-bold"
-      style="color: var(--color-red-pastel); font-size: 20px"
+      style="color: var(--color-text-main); font-size: 20px"
     >
       Loading data...
     </h3>
-    <table v-else>
+    <table v-else style="width: 100%">
       <tr>
         <th class="title-table">No</th>
         <th class="title-table">Image</th>
@@ -22,7 +33,7 @@
           Add one
         </th>
       </tr>
-      <tr :key="exercise._id" v-for="(exercise, index) in listExercise">
+      <tr :key="exercise._id" v-for="(exercise, index) in fillExercises">
         <td
           class="content-table"
           style="
@@ -43,9 +54,13 @@
           <a
             class="btn-section"
             style="margin-right: 8px; color: var(--color-blue-pastel)"
+            @click="isShowUpdate   = true"
             >Edit</a
           >
-          <a class="btn-section" style="color: var(--color-red-pastel)"
+          <a
+            @click="handleDeleteExercise(exercise._id)"
+            class="btn-section"
+            style="color: var(--color-red-pastel)"
             >Delete</a
           >
         </td>
@@ -150,19 +165,116 @@
         </div>
       </div>
     </div>
+    <!-- Modal FORM Update -->
+    <div v-if="isShowUpdate" class="modal fade" id="exampleModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div
+            class="modal-header flex align-items-center justify-content-center mb-3"
+          >
+            <h5 class="modal-title" id="exampleModalLabel">
+              Update exercise <i class="fas fa-dumbbell ml-2"></i>
+            </h5>
+            <i
+              class="fas fa-close ml-auto p-3 ml-3 btn-close"
+              @click="isShowUpdate = false"
+            ></i>
+          </div>
+          <div class="form_wrapper">
+            <Form
+              @submit="handleModal"
+              class="form_register"
+              :validation-schema="exerciseFormSchema"
+            >
+              <div class="form-group">
+                <label class="label_form" for="name">Name of exercise</label>
+                <Field
+                  name="name"
+                  type="text"
+                  class="form-control"
+                  placeholder="example: push up"
+                />
+                <ErrorMessage name="name" class="error-feedback" />
+              </div>
+              <div class="form-group">
+                <label class="label_form" for="description">Description</label>
+
+                <Field
+                  name="description"
+                  type="text"
+                  class="form-control"
+                  placeholder="The brief describe for exercise..."
+                />
+                <ErrorMessage name="description" class="error-feedback" />
+              </div>
+              <div class="form-group">
+                <label class="label_form" for="duration">Duration</label>
+                <Field
+                  name="duration"
+                  type="number"
+                  class="form-control ml-3 mr-2"
+                  placeholder="5,15,..."
+                  style="display: inline-block; width: 100px"
+                />minute
+                <ErrorMessage name="duration" class="error-feedback" />
+              </div>
+              <div class="form-group">
+                <label class="label_form" for="quantity_rep_per_set"
+                  >The quantity rep for each set</label
+                >
+                <Field
+                  name="quantity_rep_per_set"
+                  type="number"
+                  class="form-control"
+                  placeholder="12 reps,etc..."
+                />
+                <ErrorMessage
+                  name="quantity_rep_per_set"
+                  class="error-feedback"
+                />
+              </div>
+              <div class="form-group">
+                <label class="label_form" for="quantity_set"
+                  >The quantity set for exercise</label
+                >
+                <Field name="quantity_set" type="number" class="form-control" />
+                <ErrorMessage name="quantity_set" class="error-feedback" />
+              </div>
+              <div class="form-group">
+                <label class="label_form" for="image"
+                  >Upload image for exercise</label
+                >
+                <Field name="image" type="file" class="form-control" />
+                <ErrorMessage name="image" class="error-feedback" />
+              </div>
+              <div class="form-group">
+                <label class="label_form" for="video"
+                  >Upload video for exercise</label
+                >
+                <Field name="video" type="file" class="form-control" />
+                <ErrorMessage name="video" class="error-feedback" />
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-modal">
+                  <i class="mr-1 fas fa-plus"></i> Update
+                </button>
+              </div>
+            </Form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import ExerciseService from "../../services/exercise.service";
-import { useToast } from "vue-toast-notification";
-import "vue-toast-notification/dist/theme-sugar.css";
+import "vue-loading-overlay/dist/css/index.css";
 
 export default {
   name: "Exercise",
-  components: { Form, Field, ErrorMessage, ExerciseService,useToast },
-  props: {},
+  components: { Form, Field, ErrorMessage, ExerciseService },
   data() {
     const exerciseFormSchema = yup.object().shape({
       name: yup
@@ -184,20 +296,86 @@ export default {
     });
     return {
       isShowModal: false,
+      isShowUpdate: false,
+      exerciseUpdate: null,
+      searchTextExercise: "",
       certificationsCoach: [],
       listExercise: [],
       exerciseFormSchema,
+      coach: {},
     };
   },
+  computed: {
+    fillExercises() {
+      if (!this.searchTextExercise) return this.listExercise;
+      return this.listExercise.filter((exercise, index) =>
+        this.exercisesStrings[index].includes(
+          this.searchTextExercise.toLowerCase()
+        )
+      );
+    },
+    fillExercisesCount() {
+      return this.listExercise.length;
+    },
+    exercisesStrings() {
+      return this.listExercise.map((exercise) => {
+        const { name } = exercise;
+        return [name.toLowerCase()].join("");
+      });
+    },
+  },
   methods: {
-    async handleModal(value) {
-      const data = { ...value, coach_id: "64e4f51d77b1cf0e70352398" };
+    async handleUpdateExercise(value) {
+      // const loader = this.$loading.show({ color: "yellow" });
+      // try {
+      //   if (this.list_exercise_per_day.length > 0) {
+      //     value.list_exercise_per_day = this.list_exercise_per_day;
+      //   }
+      //   console.log("🚀 ~ file: Course.vue:599 ~ handleUpdateCourse ~ value:", value)
+      //   await ExerciseService.update(this.updateCourse._id, value);
+      // } catch (error) {
+      //   console.log("ERROR ", error);
+      // }
+      // loader.hide();
+      // this.isShowUpdate = false;
+      // console.log(location);
+      // // location.reload();
+    },
+    async handleDeleteExercise(id) {
       try {
-        const $toast = useToast();
-        let instance = $toast.success("Saving data...");
+        this.$swal
+          .fire({
+            title: "Are you sure?",
+            text: "You are deleting exercise, carefully !",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "orange",
+            cancelButtonColor: "black",
+            color: "orange",
+            confirmButtonText: "Yes, delete it!",
+          })
+          .then(async (result) => {
+            if (result.isConfirmed) {
+              const response = await ExerciseService.delete(id);
+              this.$swal.fire({
+                title: "Deleted!",
+                text: "Your exercise has been deleted.",
+                icon: "success",
+              });
+              location.reload();
+            }
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async handleModal(value) {
+      const data = { ...value, coach_id: this.coach._id };
+      try {
+        const loader = this.$loading.show({ color: "yellow" });
         await ExerciseService.create(data);
-        instance.dismiss();
         this.isShowModal = false;
+        loader.hide();
       } catch (error) {
         console.log("FAILED !");
       }
@@ -208,29 +386,28 @@ export default {
     },
     async getListExercise() {
       try {
-        const result = await ExerciseService.getAll();
+        const loader = this.$loading.show({ color: "yellow" });
+        this.coach = this.$store.state.auth.user.coach;
+        const result = await ExerciseService.getByCoachId(this.coach._id);
         this.listExercise = result;
+        loader.hide();
       } catch (error) {
-        console.log(
-          "🚀 ~ file: Certification.vue:59 ~ getListExercise ~ error:",
-          error
-        );
+        console.log(error);
       }
     },
   },
   mounted() {
     this.getListExercise();
   },
-  computed: {},
 };
 </script>
 
 <style scoped>
 .wrapper {
-  max-height: 800px;
+  max-height: 500px;
   position: relative;
-  padding: 60px;
-  box-shadow: rgba(100, 100, 111, 0.2) 7px 7px 29px 7px;
+  overflow-y: scroll;
+  padding: 30px;
 }
 .title-table {
   width: 120px;

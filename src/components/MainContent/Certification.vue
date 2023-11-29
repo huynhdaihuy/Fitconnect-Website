@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper flex align-items-center justify-content-center">
+  <div class="mt-5 wrapper flex align-items-center justify-content-center">
     <h3
       v-if="certificationsCoach.length == 0"
       class="font-weight-bold"
@@ -52,7 +52,10 @@
             style="margin-right: 8px; color: var(--color-blue-pastel)"
             >Edit</a
           >
-          <a class="btn-section" style="color: var(--color-red-pastel)"
+          <a
+            @click="handleDeleteCertification(certification._id)"
+            class="btn-section"
+            style="color: var(--color-red-pastel)"
             >Delete</a
           >
         </td>
@@ -80,13 +83,50 @@ export default {
     },
     async getCertificationCoach() {
       try {
-        const result = await CertificationService.getAll();
+        const coachId = this.$store.state.auth.user.coach._id;
+        const result = await CertificationService.getByCoachId(coachId);
         this.certificationsCoach = result;
       } catch (error) {
         console.log(
           "🚀 ~ file: Certification.vue:59 ~ getCertificationCoach ~ error:",
           error
         );
+      }
+    },
+    async handleDeleteCertification(id) {
+      console.log(
+        "🚀 ~ file: Certification.vue:97 ~ handleDeleteCertification ~ id:",
+        id
+      );
+      try {
+        this.$swal
+          .fire({
+            title: "Are you sure?",
+            text: "You are deleting certification, carefully !",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "orange",
+            cancelButtonColor: "black",
+            color: "orange",
+            confirmButtonText: "Yes, delete it!",
+          })
+          .then(async (result) => {
+            if (result.isConfirmed) {
+              const response = await CertificationService.delete(id);
+              console.log(
+                "🚀 ~ file: Course.vue:351 ~ createCourse ~ response:",
+                response
+              );
+              this.$swal.fire({
+                title: "Deleted!",
+                text: "Your ceritication has been deleted.",
+                icon: "success",
+              });
+              location.reload();
+            }
+          });
+      } catch (error) {
+        console.log(error);
       }
     },
   },
@@ -99,9 +139,10 @@ export default {
 
 <style scoped>
 .wrapper {
+  max-height: 600px;
+  overflow-y: scroll;
   position: relative;
   padding: 60px;
-  box-shadow: rgba(100, 100, 111, 0.2) 7px 7px 29px 7px;
 }
 .title-table {
   width: 120px;

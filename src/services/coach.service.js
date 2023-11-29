@@ -10,14 +10,16 @@ function callApi(baseURL) {
     },
   });
 }
-class ExerciseService {
-  constructor(baseUrl = `${config.apiUrl}/api/exercise`) {
+
+class CoachService {
+  constructor(baseUrl = `${config.apiUrl}/api/coach`) {
     this.api = callApi(baseUrl);
   }
   async getAll() {
     return (await this.api.get("/")).data;
   }
   async create(data) {
+    console.log("DATA REGISTER : " + data);
     return (await this.api.post("/", data)).data;
   }
   async deleteAll() {
@@ -26,12 +28,6 @@ class ExerciseService {
   async get(id) {
     return (await this.api.get(`/${id}`)).data;
   }
-  async getByCoachId(coachId) {
-    return (await this.api.get(`/coach/${coachId}`)).data;
-  }
-  async getByCategory(category) {
-    return (await this.api.get(`/category/${category}`)).data;
-  }
   async update(id, data) {
     return (await this.api.put(`/${id}`, data)).data;
   }
@@ -39,4 +35,4 @@ class ExerciseService {
     return (await this.api.delete(`/${id}`)).data;
   }
 }
-export default new ExerciseService();
+export default new CoachService();

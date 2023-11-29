@@ -1,28 +1,40 @@
-import axios from 'axios';
-
-const API_URL = 'api/users/';
+import axios from "axios";
+import config from "../../config/config";
+const API_URL = `${config.apiUrl}/api/auth/coach/`;
 
 class AuthService {
-    login(user) {
-        return axios
-            .post(API_URL + 'login', { user })
-            .then(response => {
-                if (response.data.accessToken) {
-                    localStorage.setItem('user', JSON.stringify(response.data));
-                }
+  constructor() {
+    console.log(API_URL)
+    this.api = axios.create({
+      baseURL: API_URL,
+    });
+  }
 
-                return response.data;
-            });
-    }
+  login(user) {
+    console.log(
+      "🚀 ~ file: auth.service.js:13 ~ AuthService ~ login ~ user:",
+      user
+    );
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    return this.api.post("signin", user, config).then((response) => {
+      if (response.data.accessToken) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      return response.data;
+    });
+  }
 
-    logout() {
-        localStorage.removeItem('user');
-    }
+  logout() {
+    localStorage.removeItem("user");
+  }
 
-    register(user) {
-        console.log(user);
-        return axios.post(API_URL + 'signup', user);
-    }
+  register(user) {
+    return this.api.post("signup", user);
+  }
 }
 
 export default new AuthService();

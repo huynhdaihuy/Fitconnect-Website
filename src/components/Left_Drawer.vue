@@ -9,18 +9,6 @@
         <i class="fas fa-tachometer-alt"></i> Dashboard
       </li>
       <li
-        :class="{ active: activeItem === 'Notification' }"
-        @click="setActiveItem('Notification')"
-      >
-        <i class="fas fa-bell"></i> Notification
-      </li>
-      <li
-        :class="{ active: activeItem === 'Message' }"
-        @click="setActiveItem('Message')"
-      >
-        <i class="fas fa-envelope"></i> Message
-      </li>
-      <li
         :class="{ active: activeItem === 'Course' }"
         @click="setActiveItem('Course')"
       >
@@ -90,6 +78,6 @@ export default {
 
 .menu-list li.active {
   background-color: rgba(0, 0, 0, 0.8);
-  color: var(--color-drawer_item);
+  color: var(--color-text-main);
 }
 </style>

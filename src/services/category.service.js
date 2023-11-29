@@ -1,6 +1,8 @@
 import createApiClient from "./api.service";
+import config from "../../config/config";
+
 class CategoryService {
-    constructor(baseUrl = "/api/category") {
+    constructor(baseUrl = `${config.apiUrl}/api/category`) {
         this.api = createApiClient(baseUrl);
     }
     async getAll() {

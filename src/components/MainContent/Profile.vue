@@ -3,7 +3,7 @@
     <div class="avatar">
       <img
         class="avatar-item"
-        src="../../assets//img/avatar/20.jpg"
+        :src="coach.url_avatar"
         alt="Avatar"
       />
       <div class="middle">
@@ -96,9 +96,13 @@ export default {
     return {
       editing: false,
       editedProfile: { ...this.profileData },
+      coach: {},
     };
   },
   methods: {
+    getCoachInfo() {
+      this.coach = this.$store.state.auth.user.coach;
+    },
     toggleEdit(field) {
       this.editing = !this.editing;
       if (!this.editing) {
@@ -114,6 +118,9 @@ export default {
     },
   },
   computed: {},
+  mounted() {
+    this.getCoachInfo();
+  },
 };
 </script>
 
@@ -125,7 +132,7 @@ export default {
   width: 1000px;
   padding: 32px;
   border-radius: 12px;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 .title-heading {
   font-weight: 600;

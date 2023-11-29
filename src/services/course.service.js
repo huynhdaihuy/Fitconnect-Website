@@ -1,10 +1,5 @@
 import axios from "axios";
-// const commonConfig = {
-//   headers: {
-//     "Content-Type": "multipart/form-data",
-//     Accept: "application/json",
-//   },
-// };
+import config from "../../config/config";
 
 function callApi(baseURL) {
   return axios.create({
@@ -16,7 +11,7 @@ function callApi(baseURL) {
   });
 }
 class CourseService {
-  constructor(baseUrl = "/api/course") {
+  constructor(baseUrl = `${config.apiUrl}/api/course/`) {
     this.api = callApi(baseUrl);
   }
   async getAll() {
@@ -29,13 +24,14 @@ class CourseService {
   async deleteAll() {
     return (await this.api.delete("/")).data;
   }
-  async get(id) {
-    return (await this.api.get(`/${id}`)).data;
+  async getbyCoachId(id) {
+    return (await this.api.get(`/coach/${id}`)).data;
   }
   async getByCategory(category) {
     return (await this.api.get(`/category/${category}`)).data;
   }
   async update(id, data) {
+    console.log("🚀 ~ file: course.service.js:34 ~ CourseService ~ update ~ id:", id)
     return (await this.api.put(`/${id}`, data)).data;
   }
   async delete(id) {
